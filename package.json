@@ -1,0 +1,17 @@
+{
+  "name": "onion",
+  "version": "0.0.0",
+  "description": "a tiny tool for managing AWS CloudFormation templates",
+  "main": "index.js",
+  "keywords": [
+    "UnquietCode",
+    "AWS",
+    "CloudFormation"
+  ],
+  "author": "Benjamin Fagin",
+  "license": "none",
+  "dependencies": {
+    "coffee-script": "^1.8.0",
+    "handlebars": "^2.0.0"
+  }
+}

@@ -1,8 +1,7 @@
 fs = require('fs')
 merge = require('./JsonMerge')
 
-module.exports = (template, output) ->
-	files = require(template)
+module.exports = (files, output) ->
 	merged = merge(files...)
 
 	collectionOrNothing = (collection) ->

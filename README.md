@@ -5,7 +5,7 @@
 ```
 git clone
 npm install
-coffee WriteTemplate.coffee configuration.json
+node node_modules/onion configuration.json
 ```
 
 ### Configuration File Format

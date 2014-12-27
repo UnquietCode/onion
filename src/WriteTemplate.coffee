@@ -1,4 +1,4 @@
-Handlebars = require 'handlebars'
+Handlebars = require './Handlebars'
 fs = require 'fs'
 merge = require './TemplateMerge'
 
@@ -16,6 +16,16 @@ temp = []
 # read each file and process with handlebars
 read = (file, properties) ->
 	raw = fs.readFileSync("#{Require.root}/#{file}", 'utf8')
+
+	# remove C-style comments from JSON files
+	if file.indexOf('.json') > 0
+
+		# remove line comments
+		raw = raw.replace(/\/\/(.*?)\r?\n/g, '')
+
+		# remove block comments
+		raw = raw.replace(/\/\*([^]*?)\*\//g, '')
+
 	compiled = Handlebars.compile(raw)(properties)
 	return JSON.parse(compiled)
 

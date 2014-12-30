@@ -9,9 +9,6 @@ if process.argv.length < 3
 # load the configuration
 configuration = Require(process.argv[2])
 
-# load the array of files
-template = Require(configuration.input)
-temp = []
 
 # read each file and process with handlebars
 read = (file, properties) ->
@@ -29,14 +26,20 @@ read = (file, properties) ->
 	compiled = Handlebars.compile(raw)(properties)
 	return JSON.parse(compiled)
 
+
 # for each file, do handlebars rendering
-for file in template
-	if file instanceof String or (typeof file).toLowerCase() is 'string'
-		temp.push read(file, configuration.properties)
-	else
-		temp.push file
+for output, template of configuration.templates
+	temp = []
 
-template = temp
-temp = undefined
+	for file in template
 
-merge(template, configuration.output)
+		# if it's a name, read the file
+		if file instanceof String or (typeof file).toLowerCase() is 'string'
+			temp.push read(file, configuration.properties)
+
+		# otherwise, it's an object so just include it as is
+		else
+			temp.push file
+
+	template = temp
+	merge(template, output)

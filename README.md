@@ -21,3 +21,12 @@ node node_modules/onion configuration.json
   }
 }
 ```
+
+## merging/compositing
+* in order
+* string or object
+### Properties handlebars replacement
+### objects add/remove/change
+### array append syntax
+### c-style comment removal
+### template version added automatically, no empty collections

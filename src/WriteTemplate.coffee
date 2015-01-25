@@ -1,6 +1,7 @@
 Handlebars = require './Handlebars'
 fs = require 'fs'
 merge = require './TemplateMerge'
+stripJSON = require 'strip-json-comments'
 
 
 if process.argv.length < 3
@@ -16,12 +17,7 @@ read = (file, properties) ->
 
 	# remove C-style comments from JSON files
 	if file.indexOf('.json') > 0
-
-		# remove line comments
-		raw = raw.replace(/\/\/(.*?)\r?\n/g, '')
-
-		# remove block comments
-		raw = raw.replace(/\/\*([^]*?)\*\//g, '')
+		raw = stripJSON(raw)
 
 	compiled = Handlebars.compile(raw)(properties)
 	return JSON.parse(compiled)

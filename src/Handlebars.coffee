@@ -33,5 +33,16 @@ Handlebars.registerHelper('counter-get', (name) ->
 #	})
 #)
 
+# delimited list helper
+Handlebars.registerHelper('list', (list, options) ->
+	delimiter = options.hash?.delimiter or ','
+	string = ''
+
+	for element, idx in list or []
+		if idx != 0 then string += "#{delimiter} "
+		string += options.fn(element)
+
+	return string;
+)
 
 module.exports = Handlebars

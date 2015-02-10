@@ -1,4 +1,6 @@
-## Onion (`v0.0`)
+## Onion (v0.0)
+
+[![Tip with Gratipay](https://assets.gratipay.com/gratipay.svg)](https://gratipay.com/UnquietCode) [![Tip with Bitcoin](https://assets.gratipay.com/bitcoin.png)](https://blockchain.info/address/1Ec6mzLpJQvuzXqhxfJz1h9ZwJmoHMW9BX)**Bitcoin**
 
 ### Usage
 
@@ -22,11 +24,5 @@ node node_modules/onion configuration.json
 }
 ```
 
-## merging/compositing
-* in order
-* string or object
-### Properties handlebars replacement
-### objects add/remove/change
-### array append syntax
-### c-style comment removal
-### template version added automatically, no empty collections
+# Contributing
+if you like this software, please consider donating money, commits, love

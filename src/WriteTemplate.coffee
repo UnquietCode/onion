@@ -1,8 +1,8 @@
-Handlebars = require './Handlebars'
+Handlebars = require 'handlebars'
 fs = require 'fs'
 merge = require './TemplateMerge'
 stripJSON = require 'strip-json-comments'
-
+greatjson = require 'greatjson'
 
 if process.argv.length < 3
 	throw new Error("usage: <configuration.json>")
@@ -10,6 +10,13 @@ if process.argv.length < 3
 # load the configuration
 configuration = Require(process.argv[2])
 
+# handlebars helpers
+require('./helpers/DefaultHelpers')(Handlebars)
+require('./helpers/CloudFormationHelpers')(Handlebars)
+
+# TODO dynamic loading of helpers
+#for helper in configuration._helpers || ['./helpers/CloudFormation']
+#Require(helper)(Handlebars)
 
 # read each file and process with handlebars
 read = (file, properties) ->
@@ -19,14 +26,23 @@ read = (file, properties) ->
 	if file.indexOf('.json') > 0
 		raw = stripJSON(raw)
 
+	# compile the template and execute it
 	compiled = Handlebars.compile(raw)(properties)
-	return JSON.parse(compiled)
+	json = greatjson.parse(compiled)
+
+	# handle parse errors
+	if json instanceof Error
+		console.log("error reading file #{file}")
+		throw json
+
+	return json
 
 
-# for each file, do handlebars rendering
+# for each template
 for output, template of configuration.templates
 	temp = []
 
+	# for each file in the template, do handlebars rendering
 	for file in template
 
 		# if it's a name, read the file

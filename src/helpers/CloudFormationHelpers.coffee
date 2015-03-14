@@ -1,12 +1,23 @@
 
 module.exports = (Handlebars) ->
 
+	# single availability zone helper
+	Handlebars.registerHelper('aws_zone', (id, options) ->
+		string = '{"Fn::Join" : ["", [{"Ref" : "AWS::Region"}, "'+id+'"]]}'
+		return new Handlebars.SafeString(string)
+	)
+
 	# availability zones helper
-	Handlebars.registerHelper('zones', (list) ->
+	Handlebars.registerHelper('aws_zones', (list, propOrOptions) ->
 		string = '['
 
 		for element, idx in list or []
 			if idx != 0 then string += ', '
+
+			# property name, if provided
+			if propOrOptions instanceof String or typeof propOrOptions is 'string'
+				element = element[propOrOptions]
+
 			string += '{"Fn::Join" : ["", [{"Ref" : "AWS::Region"}, "'+element+'"]]}'
 
 		string += ']'

@@ -1,7 +1,22 @@
 
 module.exports = (Handlebars) ->
 
-	# single availability zone helper
+	# security group helper
+	Handlebars.registerHelper('aws_sg', (options) ->
+		values = options.hash
+
+		sg = {
+			IpProtocol : "#{values.protocol}"
+			FromPort : "#{values.port}"
+			ToPort : "#{values.port}"
+			CidrIp : "#{values.cidr}"
+		}
+
+		sg = JSON.stringify(sg, null, 2)
+		return new Handlebars.SafeString(sg)
+	)
+
+	# availability zone helper
 	Handlebars.registerHelper('aws_zone', (id, options) ->
 		string = '{"Fn::Join" : ["", [{"Ref" : "AWS::Region"}, "'+id+'"]]}'
 		return new Handlebars.SafeString(string)

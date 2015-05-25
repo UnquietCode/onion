@@ -1,3 +1,4 @@
+RANDOM_CHARS = 'abcdefghijklmnopqrstuvwxyz'
 
 module.exports = (Handlebars) ->
 
@@ -38,4 +39,26 @@ module.exports = (Handlebars) ->
 			string += options.fn(element)
 
 		return string;
+	)
+
+	# random value helper
+	# generates a random string of the form [a-z]+[a-z0-9]*
+	Handlebars.registerHelper('random', (size, options) ->
+		size = if options then size else 8
+		if size < 0 then throw 'string length must be >= 0'
+
+		string = ''
+
+		for idx in [0...size]
+
+			# use a number for the first value, or 30% of the time
+			useNumber = idx != 0 && Math.random() <= 0.3
+
+			if useNumber
+				string += Math.floor(Math.random() * 10)
+			else
+				charIndex = Math.floor(Math.random() * RANDOM_CHARS.length)
+				string += RANDOM_CHARS[charIndex]
+
+		return string
 	)

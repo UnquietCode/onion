@@ -39,6 +39,43 @@ module.exports = (Handlebars) ->
 		return new Handlebars.SafeString(string)
 	)
 
+	# Network ACL helper
+	acl_counters = {}
+	
+	Handlebars.registerHelper('aws_acl', (options) ->
+		values = options.hash		
+		counter = (acl_counters[values.prefix] ?= { in: 0, out: 0 })
+		
+		# get the next rule ID
+		if values.egress == true
+			rule = (counter.out += 1)
+		else
+			rule = (counter.in += 1)
+		
+		# get the acl ID
+		id = JSON.parse("{\"value\" : #{values.id}}").value
+			
+		acl = {
+			Type: 'AWS::EC2::NetworkAclEntry'
+			Properties: {
+				Protocol: "#{values.protocol}"
+				CidrBlock: "#{values.cidr}"
+				PortRange: {
+					From: "#{values.port}"
+					To: "#{values.port}"
+				}				
+				Egress: "#{values.egress}"
+				RuleAction: "#{values.action || 'allow'}"
+				NetworkAclId: id
+				RuleNumber: "#{rule}"
+			}
+		}
+
+		name = "#{values.prefix}#{rule}"
+		acl = JSON.stringify(acl, null, 2)
+		return new Handlebars.SafeString("\"#{name}\" : #{acl}")
+	)
+
 	# name helper
 	#Handlebars.registerHelper("name", (string) ->
 	#	JSON.stringify({

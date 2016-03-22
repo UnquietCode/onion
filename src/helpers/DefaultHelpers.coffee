@@ -40,6 +40,13 @@ module.exports = (Handlebars) ->
 
 		return string;
 	)
+	
+	# block param pass-through
+	Handlebars.registerHelper('using', (args..., options) ->
+		return options.fn(this, {
+			data: options.data, blockParams: args
+		})
+	)	
 
 	# random value helper
 	# generates a random string of the form [a-z]+[a-z0-9]*

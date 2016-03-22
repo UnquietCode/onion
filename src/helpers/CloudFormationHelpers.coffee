@@ -45,6 +45,13 @@ module.exports = (Handlebars) ->
 	Handlebars.registerHelper('aws_acl', (options) ->
 		values = options.hash		
 		counter = (acl_counters[values.prefix] ?= { in: 0, out: 0 })
+		port = JSON.parse("{\"value\" : #{values.port}}").value
+		
+		# get the port or port range
+		if Array.isArray(port)
+			range = port
+		else
+			range = [port, port]
 		
 		# get the next rule ID
 		if values.egress == true
@@ -61,8 +68,8 @@ module.exports = (Handlebars) ->
 				Protocol: "#{values.protocol}"
 				CidrBlock: "#{values.cidr}"
 				PortRange: {
-					From: "#{values.port}"
-					To: "#{values.port}"
+					From: "#{range[0]}"
+					To: "#{range[1]}"
 				}				
 				Egress: "#{values.egress}"
 				RuleAction: "#{values.action || 'allow'}"

@@ -8,7 +8,9 @@ if process.argv.length < 3
 	throw new Error("usage: <configuration.json>")
 
 # load the configuration
-configuration = Require(process.argv[2])
+configuration = fs.readFileSync("#{Require.root}/#{process.argv[2]}", 'utf8')
+configuration = stripJSON(configuration)
+configuration = greatjson.parse(configuration)
 
 # handlebars helpers
 require('./helpers/DefaultHelpers')(Handlebars)

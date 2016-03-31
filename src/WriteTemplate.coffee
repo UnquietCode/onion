@@ -4,14 +4,6 @@ merge = require './TemplateMerge'
 stripJSON = require 'strip-json-comments'
 greatjson = require 'greatjson'
 
-if process.argv.length < 3
-	throw new Error("usage: <configuration.json>")
-
-# load the configuration
-configuration = fs.readFileSync("#{Require.root}/#{process.argv[2]}", 'utf8')
-configuration = stripJSON(configuration)
-configuration = greatjson.parse(configuration)
-
 # handlebars helpers
 require('./helpers/DefaultHelpers')(Handlebars)
 require('./helpers/CloudFormationHelpers')(Handlebars)
@@ -39,6 +31,11 @@ read = (file, properties) ->
 
 	return json
 
+# load the configuration
+if process.argv.length < 3
+	throw new Error("usage: <configuration.json>")
+
+configuration = read(process.argv[2])
 
 # for each template
 for output, template of configuration.templates

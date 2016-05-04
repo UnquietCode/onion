@@ -4,11 +4,18 @@ module.exports = (Handlebars) ->
 	# security group helper
 	Handlebars.registerHelper('aws_sg', (options) ->
 		values = options.hash
+		port = JSON.parse("{\"value\" : #{values.port}}").value
+		
+		# get the port or port range
+		if Array.isArray(port)
+			range = port
+		else
+			range = [port, port]
 
 		sg = {
 			IpProtocol : "#{values.protocol}"
-			FromPort : "#{values.port}"
-			ToPort : "#{values.port}"
+			FromPort : "#{range[0]}"
+			ToPort : "#{range[1]}"
 			CidrIp : "#{values.cidr}"
 		}
 

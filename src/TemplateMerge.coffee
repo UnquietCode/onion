@@ -14,6 +14,7 @@ module.exports = (files, output) ->
 	out =
 		AWSTemplateFormatVersion: merged.AWSTemplateFormatVersion or '2010-09-09'
 		Description: merged.Description
+		Metadata: collectionOrNothing(merged.Metadata)
 		Parameters: collectionOrNothing(merged.Parameters)
 		Mappings: collectionOrNothing(merged.Mappings)
 		Resources: collectionOrNothing(merged.Resources)

@@ -23,6 +23,20 @@ module.exports = (Handlebars) ->
 		return new Handlebars.SafeString(sg)
 	)
 
+	# dummy security group helper
+	# http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group.html#cfn-ec2-securitygroup-securitygroupegress
+	Handlebars.registerHelper('aws_dummy_sg', (options) ->
+		values = options.hash
+
+		sg = {
+			CidrIp : "127.0.0.1/32"
+			IpProtocol : "-1"
+		}
+
+		sg = JSON.stringify(sg, null, 2)
+		return new Handlebars.SafeString(sg)
+	)
+
 	# availability zone helper
 	Handlebars.registerHelper('aws_zone', (id, options) ->
 		string = '{"Fn::Join" : ["", [{"Ref" : "AWS::Region"}, "'+id+'"]]}'

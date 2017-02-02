@@ -69,3 +69,13 @@ module.exports = (Handlebars) ->
 
 		return string
 	)
+	
+	# string to uppercase
+	Handlebars.registerHelper('uppercase', (input, options) ->
+		return input.toUpperCase()
+	)
+	
+	# string to lowercase
+	Handlebars.registerHelper('lowercase', (input, options) ->
+		return input.toLowerCase()
+	)

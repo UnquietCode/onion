@@ -3,6 +3,7 @@ fs = require 'fs'
 merge = require './TemplateMerge'
 stripJSON = require 'strip-json-comments'
 greatjson = require 'greatjson'
+cson = require 'cson'
 
 # handlebars helpers
 require('./helpers/DefaultHelpers')(Handlebars)
@@ -14,28 +15,65 @@ require('./helpers/CloudFormationHelpers')(Handlebars)
 
 # read each file and process with handlebars
 read = (file, properties) ->
-	raw = fs.readFileSync("#{Require.root}/#{file}", 'utf8')
 
-	# remove C-style comments from JSON files
-	if file.indexOf('.json') > 0
-		raw = stripJSON(raw)
+	# handle JS
+	if file.endsWith('.js')
+		data = Require(file)
 
-	# compile the template and execute it
-	compiled = Handlebars.compile(raw)(properties)
-	json = greatjson.parse(compiled)
+	# handle JSON
+	else if file.indexOf('.json') > 0
+		raw = fs.readFileSync("#{Require.root}/#{file}", 'utf8')
+		raw = stripJSON(raw)  # remove C-style comments
+		compiled = Handlebars.compile(raw)(properties)
+		data = greatjson.parse(compiled)
+
+	# handle CSON
+	else if file.endsWith('.cson')
+		raw = fs.readFileSync("#{Require.root}/#{file}", 'utf8')
+		compiled = Handlebars.compile(raw)(properties)
+		data = cson.parse(compiled)
+	
+	else
+		data = Error("unsupported file format '#{file}'")
 
 	# handle parse errors
-	if json instanceof Error
+	if data instanceof Error
 		console.log("error reading file #{file}")
-		throw json
+		throw data
 
-	return json
+	return data
+
+# read configuration files
+readConfiguration = (file) ->
+	
+	# handle JSON
+	if file.endsWith('.json')
+		raw = fs.readFileSync("#{Require.root}/#{file}", 'utf8')
+		raw = stripJSON(raw)  # remove C-style comments
+		data = greatjson.parse(raw)
+
+	# handle JS
+	else if file.endsWith('.js')
+		data = Require(file)
+
+	# handle CSON
+	else if file.endsWith('.cson')
+		data = cson.load("#{Require.root}/#{file}")
+		
+	else
+		data = Error("invalid file extension for configuration file '#{file}'")
+
+	if data instanceof Error
+		console.log("error reading configuration file '#{file}'")
+		throw data
+	
+	return data
 
 # load the configuration
 if process.argv.length < 3
-	throw new Error("usage: <configuration.json>")
+	throw new Error("usage: <configuration.ext>")
 
-configuration = read(process.argv[2])
+configuration = readConfiguration(process.argv[2])
 
 # for each template
 for output, template of configuration.templates

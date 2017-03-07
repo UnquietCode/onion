@@ -4,6 +4,7 @@ merge = require './TemplateMerge'
 stripJSON = require 'strip-json-comments'
 greatjson = require 'greatjson'
 cson = require 'cson'
+yaml = require('js-yaml');
 
 # handlebars helpers
 require('./helpers/DefaultHelpers')(Handlebars)
@@ -12,6 +13,14 @@ require('./helpers/CloudFormationHelpers')(Handlebars)
 # TODO dynamic loading of helpers
 #for helper in configuration._helpers || ['./helpers/CloudFormation']
 #Require(helper)(Handlebars)
+
+readFile = (file) ->
+	return fs.readFileSync("#{Require.root}/#{file}", 'utf8')
+
+readJSON = (file) ->
+	content = readFile(file)
+	content = stripJSON(content)  # remove C-style comments
+	return content
 
 # read each file and process with handlebars
 read = (file, properties) ->
@@ -22,17 +31,22 @@ read = (file, properties) ->
 
 	# handle JSON
 	else if file.indexOf('.json') > 0
-		raw = fs.readFileSync("#{Require.root}/#{file}", 'utf8')
-		raw = stripJSON(raw)  # remove C-style comments
+		raw = readJSON(file)
 		compiled = Handlebars.compile(raw)(properties)
 		data = greatjson.parse(compiled)
 
 	# handle CSON
 	else if file.endsWith('.cson')
-		raw = fs.readFileSync("#{Require.root}/#{file}", 'utf8')
+		raw = readFile(file)
 		compiled = Handlebars.compile(raw)(properties)
 		data = cson.parse(compiled)
 	
+	# handle YAML
+	else if file.endsWith('.yaml')
+		raw = readFile(file)
+		compiled = Handlebars.compile(raw)(properties)
+		data = yaml.safeLoad(compiled)
+
 	else
 		data = Error("unsupported file format '#{file}'")
 
@@ -48,8 +62,7 @@ readConfiguration = (file) ->
 	
 	# handle JSON
 	if file.endsWith('.json')
-		raw = fs.readFileSync("#{Require.root}/#{file}", 'utf8')
-		raw = stripJSON(raw)  # remove C-style comments
+		raw = readJSON(file)
 		data = greatjson.parse(raw)
 
 	# handle JS
@@ -58,7 +71,13 @@ readConfiguration = (file) ->
 
 	# handle CSON
 	else if file.endsWith('.cson')
-		data = cson.load("#{Require.root}/#{file}")
+		raw = readFile(file)
+		data = cson.parse(raw)
+		
+	# handle YAML
+	else if file.endsWith('.yaml')
+		raw = readFile(file)
+		data = yaml.safeLoad(raw)
 		
 	else
 		data = Error("invalid file extension for configuration file '#{file}'")

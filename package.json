@@ -6,7 +6,10 @@
   "keywords": [
     "UnquietCode",
     "AWS",
-    "CloudFormation"
+    "CloudFormation",
+    "JSON",
+    "YAML",
+    "CSON"
   ],
   "author": "Benjamin Fagin",
   "license": "none",

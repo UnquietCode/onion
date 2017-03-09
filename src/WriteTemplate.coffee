@@ -4,7 +4,7 @@ merge = require './TemplateMerge'
 stripJSON = require 'strip-json-comments'
 greatjson = require 'greatjson'
 cson = require 'cson'
-yaml = require('js-yaml');
+yaml = require 'js-yaml'
 
 # handlebars helpers
 require('./helpers/DefaultHelpers')(Handlebars)

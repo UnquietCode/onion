@@ -12,12 +12,13 @@ module.exports = (files, output) ->
 	# create an output object, with properties in order
 	out =
 		AWSTemplateFormatVersion: merged.AWSTemplateFormatVersion or '2010-09-09'
-		Description: merged.Description
+		Description: merged.Description or 'created with Onion (https://github.com/UnquietCode/Onion)'
 	
 	# conditionally append a few more collections
 	maybeAppend(out, 'Metadata', merged.Metadata)
 	maybeAppend(out, 'Parameters', merged.Parameters)
 	maybeAppend(out, 'Mappings', merged.Mappings)
+	maybeAppend(out, 'Conditions', merged.Conditions)
 	maybeAppend(out, 'Resources', merged.Resources)
 	maybeAppend(out, 'Outputs', merged.Outputs)
 	

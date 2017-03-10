@@ -31,6 +31,12 @@ module.exports = (Handlebars) ->
 
 	# delimited list helper
 	Handlebars.registerHelper('list', (list, options) ->
+		if typeof list is 'string'
+			list = JSON.parse("{\"value\" : #{list}}").value
+
+			if not Array.isArray(list)
+				list = [list]
+		
 		delimiter = options.hash?.delimiter or ','
 		string = ''
 
@@ -72,10 +78,10 @@ module.exports = (Handlebars) ->
 	
 	# string to uppercase
 	Handlebars.registerHelper('uppercase', (input, options) ->
-		return input.toUpperCase()
+		return (""+input).toUpperCase()
 	)
 	
 	# string to lowercase
 	Handlebars.registerHelper('lowercase', (input, options) ->
-		return input.toLowerCase()
+		return (""+input).toLowerCase()
 	)

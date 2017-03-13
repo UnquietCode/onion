@@ -42,7 +42,7 @@ module.exports = (Handlebars) ->
 
 		for element, idx in list or []
 			if idx != 0 then string += "#{delimiter} "
-			string += options.fn(element)
+			string += options.fn(element, {data: {index: idx}})
 
 		return string;
 	)

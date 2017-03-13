@@ -1,4 +1,4 @@
-## Onion (v0.0)
+## onion (v0.0)
 
 # WIP
 Used daily for production-ready applications, so it works great, but needs a little love to bring it to 0.1,

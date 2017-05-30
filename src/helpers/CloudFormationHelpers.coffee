@@ -1,6 +1,29 @@
 
 module.exports = (Handlebars) ->
 
+	# multi-line join function
+	Handlebars.registerHelper('aws_join', (options) ->
+		content = options.fn(this)
+		lines = content.split('\n')
+		
+		# re-adjust whitespace by looking at the first line
+		if lines
+			whitespaceEnd = lines[0].search(/\S|$/)
+			whitespace = lines[0].substring(0, whitespaceEnd)
+			
+			for i in [0...lines.length]
+				line = lines[i]
+				
+				if line.startsWith(whitespace)
+					line = line.substring(whitespaceEnd)
+					
+				line = line.replace(/\s+$/, '')
+				lines[i] = line
+		
+		joined = JSON.stringify({'Fn::Join' : ['\n', lines]}, null, 2)
+		return new Handlebars.SafeString(joined)
+	)
+	
 	# security group helper
 	Handlebars.registerHelper('aws_sg', (options) ->
 		values = options.hash

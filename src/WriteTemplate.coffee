@@ -94,6 +94,19 @@ if process.argv.length < 3
 
 configuration = readConfiguration(process.argv[2])
 
+# register partials
+for name, file of configuration.partials or {}
+
+		# if it's a name, read the file
+		if file instanceof String or (typeof file).toLowerCase() is 'string'
+			content = readFile(file)
+
+		# otherwise, it's an object so just include it as is
+		else
+			content = file
+			
+		Handlebars.registerPartial(name, content)
+
 # for each template
 for output, template of configuration.templates
 	temp = []

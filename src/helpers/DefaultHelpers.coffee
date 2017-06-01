@@ -85,3 +85,14 @@ module.exports = (Handlebars) ->
 	Handlebars.registerHelper('lowercase', (input, options) ->
 		return (""+input).toLowerCase()
 	)
+	
+	# line break
+	Handlebars.registerHelper('$break', (count, options) ->
+		count = if options then count else 1
+		string = ""
+		
+		for idx in [0...count]
+			string += "\n"
+			
+		return string
+	)

@@ -17,7 +17,7 @@
     "coffee-script": "^1.12.4",
     "cson": "^4.0.0",
     "greatjson": "0.0.8",
-    "handlebars": "^4.0.6",
+    "handlebars": "^4.0.10",
     "js-yaml": "^3.8.2",    
     "strip-json-comments": "^2.0.1"
   }

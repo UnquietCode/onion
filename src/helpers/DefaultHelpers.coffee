@@ -96,3 +96,24 @@ module.exports = (Handlebars) ->
 			
 		return string
 	)
+	
+	# array slicer
+	Handlebars.registerHelper('slice', (context, options) =>
+		string = ""
+		offset = parseInt(""+options.hash.offset, 10) || 0
+		limit = parseInt(""+options.hash.limit, 10)
+		start = 0
+		end = 0
+
+		if offset < 0
+			start = if -offset <= context.length then context.length + offset else context.length
+		else
+			start = if offset <= context.length then offset else context.length
+
+		end = if (start + limit) < context.length then start + limit else context.length
+		
+		for idx in [start...end]
+			string += options.fn(context[idx])
+
+	  return string
+	)

@@ -1,4 +1,5 @@
 fs = require 'fs'
+path = require 'path'
 merge = require './JsonMerge'
 yaml = require 'js-yaml'
 
@@ -31,5 +32,12 @@ module.exports = (files, output) ->
 		data = yaml.safeDump(out)
 	else
 		raise "invalid output format for file '#{output}'"
-
+	
+	# ensure directory exists
+	outputDirectory = path.dirname(output)
+	
+	unless fs.existsSync(outputDirectory)
+		fs.mkdirSync(outputDirectory)
+		
+	# write out the file
 	fs.writeFileSync(output, data)

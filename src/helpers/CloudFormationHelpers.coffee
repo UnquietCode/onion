@@ -39,9 +39,13 @@ module.exports = (Handlebars) ->
 			IpProtocol : "#{values.protocol}"
 			FromPort : "#{range[0]}"
 			ToPort : "#{range[1]}"
-			CidrIp : "#{values.cidr}"
 		}
 
+		if values.cidr6
+			sg['CidrIpv6'] = "#{values.cidr6}"
+		else
+			sg['CidrIp'] = "#{values.cidr}"		
+		
 		sg = JSON.stringify(sg, null, 2)
 		return new Handlebars.SafeString(sg)
 	)

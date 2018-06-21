@@ -6,4 +6,4 @@ if [[ $# < 2 ]]; then
   exit 1
 fi
 
-docker run --volume "$1:/templates" unquietcode/onion "$2"
+exec docker run --volume "$1:/templates" unquietcode/onion "$2"

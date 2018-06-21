@@ -32,20 +32,35 @@ read = (file, properties) ->
 	# handle JSON
 	else if file.indexOf('.json') > 0
 		raw = readJSON(file)
-		compiled = Handlebars.compile(raw)(properties)
-		data = greatjson.parse(compiled)
+		
+		if file.indexOf('.hbs') > 0
+			data = Handlebars.compile(raw)(properties)
+		else
+			data = raw
+
+		data = greatjson.parse(data)
 
 	# handle CSON
-	else if file.endsWith('.cson')
+	else if file.indexOf('.cson') > 0
 		raw = readFile(file)
-		compiled = Handlebars.compile(raw)(properties)
-		data = cson.parse(compiled)
+		
+		if file.indexOf('.hbs') > 0
+			data = Handlebars.compile(raw)(properties)
+		else
+			data = raw
+
+		data = cson.parse(data)
 	
 	# handle YAML
-	else if file.endsWith('.yaml')
+	else if file.indexOf('.yaml') > 0
 		raw = readFile(file)
-		compiled = Handlebars.compile(raw)(properties)
-		data = yaml.safeLoad(compiled)
+
+		if file.indexOf('.hbs') > 0
+			data = Handlebars.compile(raw)(properties)
+		else
+			data = raw
+
+		data = yaml.safeLoad(data)
 
 	else
 		data = Error("unsupported file format '#{file}'")
